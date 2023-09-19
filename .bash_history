@@ -294,3 +294,19 @@ g++ -o palindrom palindrom.cpp
 ./palindrom.exe
 g++ -o palindrom palindrom.cpp
 ./palindrom.exe
+git init
+git add palindrom.cpp
+git commit -m "first commit"
+git add .
+git commit -m "1st commit"
+git brain -M main
+git branch -M main
+git remote add origin https://github.com/mmeka24/c.git
+git remote add origin https://github.com/mmeka24/Cplusplus.git
+git push origin main
+git init
+git remote add origin https://github.com/mmeka24/Cplusplus.git
+git add palindrom.cpp
+git commit -m "message"
+git push origin main 
+git push origin main 
