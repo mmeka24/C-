@@ -310,3 +310,59 @@ git add palindrom.cpp
 git commit -m "message"
 git push origin main 
 git push origin main 
+git init
+git remote add origin https://github.com/mmeka24/Cplusplus.git
+git add palindrom.cpp
+git add .
+git commit -m "message"
+git push origin main
+git push origin main 
+mekas@srimeka ~
+$ git init
+Reinitialized existing Git repository in /home/mekas/.git/
+mekas@srimeka ~
+$ git remote add origin https://github.com/mmeka24/Cplusplus.git
+error: remote origin already exists.
+mekas@srimeka ~
+$ git add palindrom.cpp
+mekas@srimeka ~
+$ git add .
+mekas@srimeka ~
+$ git commit -m "message"
+[main a7e8f43] message
+ 1 file changed, 16 insertions(+)
+mekas@srimeka ~
+$ git push origin main
+Username for 'https://github.com':
+Password for 'https://mmeka24@github.com':
+remote: Invalid username or password.
+fatal: Authentication failed for 'https://github.com/mmeka24/C-.git/'
+mekas@srimeka ~
+$ git push origin main
+Username for 'https://github.com':
+Password for 'https://mmeka24@github.com':
+git push origin main
+mekas@srimeka ~
+$ git init
+Reinitialized existing Git repository in /home/mekas/.git/
+mekas@srimeka ~
+$ git remote add origin https://github.com/mmeka24/Cplusplus.git
+error: remote origin already exists.
+mekas@srimeka ~
+$ git add palindrom.cpp
+mekas@srimeka ~
+$ git add .
+mekas@srimeka ~
+$ git commit -m "message"
+[main a7e8f43] message
+ 1 file changed, 16 insertions(+)
+mekas@srimeka ~
+$ git push origin main
+Username for 'https://github.com':
+Password for 'https://mmeka24@github.com':
+remote: Invalid username or password.
+fatal: Authentication failed for 'https://github.com/mmeka24/C-.git/'
+mekas@srimeka ~
+$ git push origin main
+Username for 'https://github.com':
+Password for 'https://mmeka24@github.com':
