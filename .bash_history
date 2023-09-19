@@ -242,3 +242,55 @@ git add mmeka24.cpp
 git add .
 git add *.cpp
 emacs palindrom palindrom.cpp
+g++ -o palindrom palindrom.cpp
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+git clone https://github.com/mmeka24/Cplusplus.git
+git add .
+git commit -m "palindrome project"
+git push origin master
+git push origin main
+git clone https://github.com/mmeka24/Cplusplus.git
+git add palindrom.cpp
+git commit -m "palindrome project"
+git commit -m "palindrome c++"
+git push origin main
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+pwd
+ls
+git init
+git remote add https://github.com/mmeka24/Cplusplus.git
+git remote add origin https://github.com/mmeka24/Cplusplus.git
+emacs palindrom palindrom.cpp
+pwd
+ls
+git init
+git remote add origin https://github.com/mmeka24/Cplusplus.git
+git commit -m "first commit"
+git push origin main
+g++ -o palindrom palindrom.cpp
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
+g++ -o palindrom palindrom.cpp
+./palindrom.exe
