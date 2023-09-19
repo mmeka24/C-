@@ -1,6 +1,4 @@
 #include<iostream>
-#include<cstring>
-#include<cmath> 
 
 // Rule 1: No global variables
 // Rule 2: no strings 
@@ -21,12 +19,12 @@ int main()
   int turn = 0; 
   char playagain; 
   srand (time(NULL));
-  bool Game = true;
+  bool inGame = true;
   char ans[1]; //going to use char array to determine if user wants to cont playing
   secretnum = rand() % 100+1; 
 
   //creating a random number from 1 to 100 
-  while (Game){
+  while (inGame){
 
     cout << "guess a number 1-100"; 
     //cout << secretnum << endl;
@@ -46,7 +44,7 @@ int main()
     if (strcmp(ans, "n") == 0) {
       cout << "you are done playing";
       //game is over so boolean is now false
-      Game = false; 
+      inGame = false; 
     }
 
   }
