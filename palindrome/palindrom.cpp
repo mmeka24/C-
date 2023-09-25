@@ -1,3 +1,4 @@
+//Manasvi Meka, C++ Palindrome Project 9/25/2023 10:55 AM
 #include <iostream>
 #include <cstring>
 #include <cctype>
