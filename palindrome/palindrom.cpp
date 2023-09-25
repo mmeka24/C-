@@ -1,4 +1,5 @@
-//Manasvi Meka, C++ Palindrome Project 9/25/2023 10:55 AM
+//Manasvi Meka, C++ Palindrome Project (Reads in an input to check if its a palindrome or not)
+// Edited Sept 25, 2023 10:55 AM
 #include <iostream>
 #include <cstring>
 #include <cctype>
