@@ -80,14 +80,14 @@ bool checkTie(char board[3][3]){
     for (int j = 0; j < 3; j++){
 
       if (board[i][j] == BLANK){
-	return false; 
+	return false; //tie is false if there are still blank spaces thus the nester for loop
       }
 
 
     }
   }
 
-  return true; 
+  return true; //returns true if there are not blank spaces on the board 
 
 }
 
