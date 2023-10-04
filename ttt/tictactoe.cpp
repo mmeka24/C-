@@ -119,7 +119,7 @@ int main(){
                 cout << "Column must be 1, 2, or 3" << endl;
             } else {
                 int row = input[0] - 'a';
-                int column = input[1] - '1';
+                int column = input[1] - '1'; //using c++ ascii values since 'a' is equivalent to 1 and creating char arrays
                 if (board[row][column] == BLANK) {
                     if (turn == XTURN) {
                         board[row][column] = XMOVE;
@@ -156,7 +156,7 @@ int main(){
         cin >> yn;
         cin.ignore();
         if (yn != 'y') {
-            stillPlaying = false;
+            stillPlaying = false; //if yes or no doesn't equal y terminate the process and print thanks
             cout << "Thanks for playing." << endl;
         }
 
