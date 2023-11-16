@@ -4,7 +4,7 @@
 #include <cstring>
 
 class media {
-//using protected to make sure these fields can be derived in other classes 
+//using protected to make sure these fields can be derived later 
 protected:
     char title[20], year[4], field_one[20], field_two[20], field_three[20];
 
