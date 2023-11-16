@@ -1,7 +1,7 @@
 #include "music.h"
 
 using namespace std;
-
+//pointers to print duration, author/creator, and publsher
 char* music::get_creator() {
     return this->field_one;
 }
