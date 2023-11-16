@@ -7,12 +7,14 @@ objective: create a media database to add, delete, and search items.
 #include <cstring>
 #include "game.h"
 using namespace std;
+//Master manages vectors of pointers to media obj. methods are add, rm (remove), and search/del
 class Master{
 	public:
 		vector<media*>* list = new vector<media*>;
 		void add(char * input){//get type and add
 			cout << "Type which media: Music, Game, or Movie? "<<endl;
 			cin.getline(input,10);
+			//media wanted to add. identify based on static var num. 
 			if(strcmp(input, "Music")==0){
 				media::type = 0;
 				music *mus = new music();
@@ -87,7 +89,7 @@ int main(){
 		return 0;	
 	}
 	if(strcmp(input, "ADD")==0){
-		master->add(input);//recurse for command
+		master->add(input);//recurse to command
 	}
 	if(strcmp(input, "SEARCH") == 0){
 		master->search_del(input, false);
