@@ -5,7 +5,7 @@ using namespace std;
 char media::response[150];
 int media::type = 0; //intializing the static var
 
-
+//year and title are required fields for all media 
 char* media::get_year() {
     return year;
 }
