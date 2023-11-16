@@ -1,3 +1,7 @@
+/*
+Nov 15 2023. manasvi meka. classes project. 
+objective: create a media database to add, delete, and search items. 
+*/
 #include <iostream>
 #include <vector>
 #include <cstring>
