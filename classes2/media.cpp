@@ -15,8 +15,8 @@ char* media::get_title() {
 }
 
 void media::print() {
-    cout << "Title " << title << endl;
-    cout << "Year " << year << endl;
+    cout << "Title: " << title << endl;
+    cout << "Year: " << year << endl;
     if (strlen(field_one)) {
         cout << field_one << endl;
     }
