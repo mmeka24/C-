@@ -17,6 +17,7 @@ char* media::get_title() {
 void media::print() {
     cout << "Title: " << title << endl;
     cout << "Year: " << year << endl;
+    //printing out the field names other than just the title and year 
     if (strlen(field_one)) {
         cout << field_one << endl;
     }
@@ -25,7 +26,7 @@ void media::print() {
 }
 
 media::~media() {
-    cout << "Are you sure that you would like to delete?" << endl;
+    cout << "Are you sure you want to delete?" << endl;
     print();
     cin.getline(response, 150);
     if (response[0] == 'y') {
