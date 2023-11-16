@@ -11,6 +11,7 @@ game::game() : movie::movie(){
 		strcpy(field_two, strtok(NULL,","));
 		strcpy(field_three, strtok(NULL,","));
 }
+//getting the publisher 
 char * game::get_pub(){
 	return field_two;
 }
