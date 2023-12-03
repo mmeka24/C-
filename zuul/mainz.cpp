@@ -1,3 +1,9 @@
+/*
+manasvi meka 
+zuul project 
+description: there are 16 rooms created as a vector each coordinated is correlated to a room number. 
+If all items are sent to room 33 or cordinate (3,3) then you have won. 
+*/
 #include <iostream>
 #include <vector>
 #include "room.h"
@@ -15,7 +21,7 @@ int main() {
     room_grid[0][0].item_list.push_back(new Item("shoe"));
     room_grid[0][0].item_list.push_back(new Item("book"));
 
-    // Connecting adjacent rooms in grid by looping through by thinking of it as a grid like tictactoe 
+    // Connecting adjacent rooms in grid by looping through and assingning directons  
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             if (i > 0) {
