@@ -1,7 +1,7 @@
 
-#ifdef NODE_H
+#ifndef NODE_H
 #define NODE_H
-
+#include "student.h"
 #include <iostream>
 
 //creating node class
@@ -21,7 +21,7 @@ class Node{
   Node* next;
   Student* student; 
 
-}
+}; 
 
 
 
