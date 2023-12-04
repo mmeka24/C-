@@ -64,7 +64,7 @@ Room* Room::nextRoom(){//goes to next room pick up drop and move between rooms
 	for(map<char, Room*>::iterator itr = exits.begin(); itr!=exits.end();++itr){
 	  cout << "Direction "<<itr->first << " Next Room "<<itr->second->i<<itr->second->j<<endl; 
 	  //cout << itr->first << itr->second << itr->second << endl;
-
+		//using key value pairs inherent to std map to incidcate the direction and room number ie (W 23)
 	}
 	cout << "Type in the first letter for the direction of the room you want to go in(e.g N for North). If you would like to quit type Q."<<endl;
 	cin >> input;
