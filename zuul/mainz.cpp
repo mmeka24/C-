@@ -50,7 +50,7 @@ int main() {
 
         // Check for win condition that is all items go to last grid vaue 3,3
         if (room && room->i == 3 && room->j == 3 && room->item_list.empty()) {
-            cout << "Congratulations! You have successfully delivered all items to room 33!" << endl;
+            cout << "Congratulations you won! You delivered all items to room 33!" << endl;
             room = nullptr;  // End game
         }
     }
