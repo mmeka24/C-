@@ -5,7 +5,7 @@
 using namespace std;
 
 Student::Student() {
-    cout << "creating student" << endl;
+    cout << "cst" << endl;
 }
 
 int Student::getID() const {
