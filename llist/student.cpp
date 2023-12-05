@@ -1,29 +1,43 @@
-#include <iostream>
 #include "student.h"
+#include <iostream>
 #include <cstring>
 
 using namespace std;
 
-
-
-
-
-Student::~Student() {
-
+Student::Student() {
+    cout << "creating student" << endl;
 }
 
-char* Student::getFirst() {
-    return firstName;
+int Student::getID() const {
+    return id;
 }
 
-char* Student::getLast() {
-    return lastName;
+void Student::setID(int ids) {
+    id = ids;
 }
 
-int Student::getId() {
-    return Id;
+void Student::setFirstname(const char* firstName) {
+    strcpy(fname, firstName);
+    
 }
 
-float Student::getGpa() {
+const char* Student::getFirstname() const {
+    return fname;
+}
+
+void Student::setLastname(const char* lastName) {
+    strcpy(lname, lastName);
+    
+}
+
+const char* Student::getLastname() const {
+    return lname;
+}
+
+void Student::setGPA(double GPA) {
+    gpa = static_cast<float>(GPA);
+}
+
+float Student::getGPA() const {
     return gpa;
 }

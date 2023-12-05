@@ -1,34 +1,23 @@
-
 #ifndef NODE_H
 #define NODE_H
-#include "student.h"
+
+
 #include <iostream>
+#include "student.h"
 
-//creating node class
-class Node{
+using namespace std;
 
- public:
-  Node(*Student);
-  ~Node(); 
-  Student* getStudent();
-  void setNext(Node*);
-  //void setStudent(Student*)
-  Node* getNext();
-   
+class Node {
+public:
+    Node(Student* myStudent);
+    ~Node();
+    Student* getStudent() const;
+    void setNext(Node* next1);
+    Node* getNext() const;
 
-  
-  private: 
-  Node* next;
-  Student* student; 
-
-}; 
-
-
-
-
-
-
-
-
+private:
+    Student* student;
+    Node* next;
+};
 
 #endif

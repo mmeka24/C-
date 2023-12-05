@@ -1,26 +1,32 @@
 #ifndef STUDENT_H
 #define STUDENT_H
 
+
+
 #include <iostream>
 #include <cstring>
+
+
 
 using namespace std;
 
 class Student {
 public:
-    
-   Student(char* first, char* last, int newid, float gpa);
-  
-    char* getFirst();
-    char* getLast();
-    int getId();
-    float getGpa();
-    ~Student();
+    Student();
+    void setID(int ids);
+    int getID() const;
+    void setFirstname(const char* firstName);
+    const char* getFirstname() const;
+    void setLastname(const char* lastName);
+    const char* getLastname() const;
+    void setGPA(double GPA);
+    float getGPA() const;
+
 private:
-    char firstName[20]; 
-    char lastName[20];
+    char fname[20];
+    char lname[20];
     float gpa;
-    int Id;
+    int id;
 };
 
 #endif
