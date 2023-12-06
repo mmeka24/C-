@@ -20,10 +20,10 @@ void Node::setNext(Node* newnext) {
     next = newnext;
 }
 
-Node* Node::getNext() const {
+Node* Node::getNext()  {
     return next;
 }
 
-Student* Node::getStudent() const {
+Student* Node::getStudent()  {
     return student;
 }
