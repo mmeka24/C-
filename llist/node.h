@@ -11,9 +11,9 @@ class Node {
 public:
     Node(Student* myStudent);
     ~Node();
-    Student* getStudent() const;
+    Student* getStudent();
     void setNext(Node* next1);
-    Node* getNext() const;
+    Node* getNext();
 
 private:
     Student* student;
