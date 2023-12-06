@@ -14,13 +14,13 @@ class Student {
 public:
     Student();
     void setID(int ids);
-    int getID() const;
-    void setFirstname(const char* firstName);
-    const char* getFirstname() const;
-    void setLastname(const char* lastName);
-    const char* getLastname() const;
+    int getID();
+    void setFirstname(char* firstName);
+     char* getFirstname();
+    void setLastname(char* lastName);
+    const char* getLastname();
     void setGPA(double GPA);
-    float getGPA() const;
+    float getGPA();
 
 private:
     char fname[20];
