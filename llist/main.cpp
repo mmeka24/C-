@@ -8,14 +8,14 @@
 int main() {
   Student* student1 = new Student();
     student1->setID(111);
-    student1->setFirstname("John");
+    student1->setFirstname("Bob");
     student1->setLastname("Doe");
     student1->setGPA(3.8);
 
     // Create the second student
     Student* student2 = new Student();
     student2->setID(222);
-    student2->setFirstname("Jane");
+    student2->setFirstname("Mel");
     student2->setLastname("Smith");
     student2->setGPA(4.2);
 

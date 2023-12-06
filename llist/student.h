@@ -18,7 +18,7 @@ public:
     void setFirstname(char* firstName);
      char* getFirstname();
     void setLastname(char* lastName);
-    const char* getLastname();
+    char* getLastname();
     void setGPA(double GPA);
     float getGPA();
 
