@@ -8,7 +8,7 @@ Student::Student() {
     cout << "csst" << endl;
 }
 
-int Student::getID() const {
+int Student::getID()  {
     return id;
 }
 
@@ -16,21 +16,21 @@ void Student::setID(int ids) {
     id = ids;
 }
 
-void Student::setFirstname(const char* firstName) {
+void Student::setFirstname( char* firstName) {
     strcpy(fname, firstName);
     
 }
 
-const char* Student::getFirstname() const {
+ char* Student::getFirstname()  {
     return fname;
 }
 
-void Student::setLastname(const char* lastName) {
+void Student::setLastname( char* lastName) {
     strcpy(lname, lastName);
     
 }
 
-const char* Student::getLastname() const {
+ char* Student::getLastname()  {
     return lname;
 }
 
@@ -38,6 +38,6 @@ void Student::setGPA(double GPA) {
     gpa = static_cast<float>(GPA);
 }
 
-float Student::getGPA() const {
+float Student::getGPA()  {
     return gpa;
 }
