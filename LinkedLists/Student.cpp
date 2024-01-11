@@ -4,22 +4,13 @@
 using namespace std;
 //getters for student
 //return functions from Student.h
-
-Student :: Student(char* first, char* last, int newId, float newgpa){
-
+Student::Student(char* first, char* last, int id, float gpa) {
   strcpy(firstName, first);
   strcpy(lastName, last);
-
-  studentID = newId;
-  GPA = newgpa; 
-
+  studentID = id;
+  GPA = gpa;
 }
 
-Student::~Student(){
-  //deconstructor which delete the array objects
-  delete[] &firstName;
-  delete[] &lastName; 
-} 
 
 char* Student::getFirstName() {
   return firstName;
