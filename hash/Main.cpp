@@ -1,7 +1,5 @@
-//Manasvi Meka
-//Linked List program that adds, deletes, print, and averages student info
-
 #include <iostream>
+#include <ifstream> 
 #include <cstring>
 #include <iomanip>
 #include "Student.h"
@@ -9,154 +7,235 @@
 
 using namespace std;
 
+Node* head = nullptr; // Assuming you have a head pointer for your linked list
 
-void rehash(int &bucketSize, Node** &hashTable);
-
+void add(Node* newNode, Node* &head, Node* prev, Node* current);
+void rehash(int *bucketSize, Node **hashTable)
 
 int main() {
-  char inp[20];
-  char first[20];
-  char last[20];
-  char input[10]; 
-  int id; 
-  
+    char inp[20];
+    char first[81];
+    char last[81];
+    int count = 0; 
 
     srand(time(NULL));
-  int initialBucket = 100;
-  int bucketSize = initialBucket;
-  Node** hashTable = new Node*[bucketSize];
 
-  for (int i = 0; i < bucketSize; i++) {
-    hashTable[i] = NULL;
-  }
+    int initialBucket = 100;
+    int bucketSize = initialBucket;
+    Node** hashTable = new Node*[bucketSize];
 
-
-  bool running = true; 
-  while(running){
-    cout << "what would you like to do: add, print, delete? " << endl; 
-    cin >> inp; 
-    if(strcmp(inp, "add") == 0){
-      
-      cout << "please enter the infromation below and click enter don't add spaces at the end" << endl; 
-        //id
-      cout << "ID: " ;
-      int studentID;
-      cin >> studentID;
-      cin.ignore(); 
-
-
-      //first name
-      cout << "First Name:" ;
-       // cin.ignore(); 
-         cin.getline(first, 81);
-         
-
-      //last name
-      cout << "Last Name: " ;
-     // cin.ignore(); 
-         cin.getline(last, 81);
-
-      //gpa
-      cout << "GPA: " << endl ;
-      float GPA; 
-      cin >> GPA;
-      Student* student = new Student(first, last, studentID, GPA);
-      add(new Node(student), head, NULL, head);
-      int hashIndex = newStudent->get_id() % bucketSize;
-
-       if(hashTable[hashIndex] == NULL){
-          hashTable[hashIndex] = new Node; 
-      }
-
-      //if there is already something in the hash table then create a new node
-      if(hashTable[hashIndex] != NULL){
-        Node* temp = hashTable[hashIndex];  
-      if(temp->getNext() != NULL){
-            temp = temp->getNext(); 
-        }
-        temp->getNext(new Node);  
-
-      else{
-        cout << "something is wrong"; 
-      }
-
-      }
-
+    for (int i = 0; i < bucketSize; i++) {
+        hashTable[i] = nullptr;
     }
-    //print
-    else if(strcmp(inp,"print") == 0) {
-       hashTable.print();
-    for (int i = 0; i < bucketSize; i++){
-      if(hashTable[i] != NULL){
-        Node *temp = hashTable[i]; 
 
-        while (temp != NULL){
-        cout << temp->getStudent->get_first_name << temp->getStudent->get_last_name << temp->getStudent->get_id << temp->getStudent->get_gpa; 
-        temp = temp->getNext(); 
-      }
+    bool running = true;
+    while (running) {
+        cout << "What would you like to do: add, print, delete or generate? " << endl;
+        cin >> inp;
 
-      }
-    }
-    }
-    
+        if (strcmp(inp, "add") == 0) {
+            cout << "Please enter the information below and press enter. Avoid adding spaces at the end." << endl;
+            
+            //id
+            cout << "ID: ";
+            int studentID;
+            cin >> studentID;
+            cin.ignore();
 
-//deleting
-else if(strcmp(inp,"delete") == 0) { 
-			cout << "Enter the id of the student you would like to delete" << endl;
-			int studentID; 
-      cin >> studentID;
-		  hashTable.remove(studentID);
+            //first name
+            cout << "First Name: ";
+            cin.ignore();
+            cin.getline(first, 81);
 
- int hashIndex = studentID % bucketSize;
+            //last name
+            cout << "Last Name: ";
+            cin.getline(last, 81);
 
- for (int i = 0; i < bucketSize; i++){
-  int hashIndex = studentID % bucketSize; 
+            //gpa
+            cout << "GPA: ";
+            float GPA;
+            cin >> GPA;
 
-      if(hashTable[hashIndex] != NULL){
-        Node *temp = hashTable[i]; 
-        Node *prev = NULL; //using prev to update after deletion 
+            Student* student = new Student(first, last, studentID, GPA);
+            add(new Node(student), head, nullptr, head);
+            
+            int hashIndex = studentID % bucketSize;
 
-        while(temp!=NULL){
-          if(temp->getStudent->get_id == studentID){
-            if(prev = NULL){
-              //if prev is NULL then move the temp next pointer to now be the head
-              hashTable[hashIndex] = temp->getNext(); 
-              delete temp; 
+            if (hashTable[hashIndex] == nullptr) {
+                hashTable[hashIndex] = new Node(student);
+            } else {
+                Node* temp = hashTable[hashIndex];
+
+                while (temp->getNext() != nullptr) {
+                    temp = temp->getNext();
+                }
+
+                temp->setNext(new Node(student));
             }
-            else{
-              prev->getNext() = temp->getNext(); 
-              delete temp; 
-              temp = prev; 
-            }
+        } else if (strcmp(inp, "print") == 0) {
+            for (int i = 0; i < bucketSize; i++) {
+                Node* temp = hashTable[i];
 
-          }
+                while (temp != nullptr) {
+                    cout << temp->getStudent()->getFirstName() << " "
+                         << temp->getStudent()->getLastName() << " "
+                         << temp->getStudent()->getStudentID() << " "
+                         << temp->getStudent()->getGPA() << endl;
+
+                    temp = temp->getNext();
+                }
+            }
+        } 
         
-          prev = temp; //prev = temp is same as prev = prev->getNext(); 
-          temp = temp->getNext(); 
+        else if (strcmp(inp, "generate") == 0) {
+        
+          /*
+          
+          randomly generate new students by grabbing a random student first and last name from the 
+          corresponding files, incrementing the id number, adding a random GPA (much like real life), and adding it in.  
+          Make sure you have a command that allows you to specify how many students to generate and add. 
+          
+               
 
+          */
+
+          int generate = 0; 
+          cout << "how many students would you like to generate: " << endl; 
+          cin >> generate; 
+          ifstream fnames;
+          fnames.open ("fnames.txt");  
+
+          ifstream lnames; 
+          lnames.open("lnames.txt")
+
+        //storing first name in an array of arrays 
+
+          char*input = new char[20]; 
+          
+          while(fnames >> input){
+            char *temp = new char [20]; 
+            strcpy(temp, input);
+            v.pushback(input);  
+          }
+
+
+        //storing lnames in an array of array 
+
+         char*ln = new char[20]; 
+         
+         while(lnames >> ln){
+            char *temp = new char[20]; 
+            strcpy(temp, ln); 
+            v.pushback(ln); 
+            generate++; 
+         }
+
+
+
+
+
+
+
+             
+
+
+        } 
+        
+        else if (strcmp(inp, "delete") == 0) {
+            cout << "Enter the id of the student you would like to delete: ";
+            int studentID;
+            cin >> studentID;
+
+            int hashIndex = studentID % bucketSize;
+
+            if (hashTable[hashIndex] != nullptr) {
+                Node* temp = hashTable[hashIndex];
+                Node* prev = nullptr;
+
+                while (temp != nullptr) {
+                    if (temp->getStudent()->getStudentID() == studentID) {
+                        if (prev == nullptr) {
+                            hashTable[hashIndex] = temp->getNext();
+                            delete temp;
+                        } else {
+                            prev->setNext(temp->getNext());
+                            delete temp;
+                        }
+                        break;
+                    }
+
+                    prev = temp;
+                    temp = temp->getNext();
+                }
+            }
+        } else if (strcmp(inp, "QUIT") == 0) {
+            running = false;
         }
-
-      }
-
-      }
     }
 
-
-
-		} 
-
-  //quit
-    else if (strcmp(input, "QUIT") == 0) {
-      running = false;
+    // Clean up memory
+    for (int i = 0; i < bucketSize; i++) {
+        Node* temp = hashTable[i];
+        while (temp != nullptr) {
+            Node* next = temp->getNext();
+            delete temp;
+            temp = next;
+        }
     }
 
-    return 0; 
-  }
+    delete[] hashTable;
+
+    return 0;
+}
+
+void add(Node* newNode, Node* &head, Node* prev, Node* current) {
+    if (head == nullptr) {
+        head = newNode;
+        return;
+    }
+
+    if (current == nullptr) {
+        prev->setNext(newNode);
+        newNode->setNext(head);
+        return;
+    }
+
+    if (newNode->getStudent()->getStudentID() < current->getStudent()->getStudentID()) {
+        if (prev == nullptr) {
+            newNode->setNext(head);
+            head = newNode;
+        } else {
+            prev->setNext(newNode);
+            newNode->setNext(current);
+        }
+    } 
+    
+    else {
+        add(newNode, head, current, current->getNext());
+    }
+}
+
+void rehash(int *bucketSize, Node **hashTable){
+    //doouble the bucketsize 
+
+    bucketsize = bucketsize * 2; 
+
+    Node** temp1 = new Node*[bucketSize];
+
+    for(int i = 0; i < bucketSize; i++){
+        temp1[i] = NULL; 
+
+    }
+
+     for(int i = 0; i < bucketSize; i++){
+
+        
+     }
 
 
 
-void rehash(int &bucketSize, Node** &hashTable){
-  bucketSize = bucketSize * 2; 
+
+
 
 
 }
