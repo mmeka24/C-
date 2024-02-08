@@ -30,3 +30,20 @@ float Student:: getGPA() {
   return GPA;
 
 }
+
+// Setters
+void Student::setFirstName(const char* first) {
+    strncpy(firstName, first, 81);
+}
+
+void Student::setLastName(const char* last) {
+    strncpy(lastName, last, 81);
+}
+
+void Student::setStudentID(int id) {
+    studentID = id;
+}
+
+void Student::setGPA(float gpa) {
+    GPA = gpa;
+}
