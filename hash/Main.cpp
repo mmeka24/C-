@@ -15,7 +15,7 @@ Node* head = NULL;
 void add(Node* newNode, Node* &head, Node* prev, Node* current);
 void rehash(int &bucketSize, Node **&hashTable);
 
-    int ibucketSize = 10; 
+    int ibucketSize = 100; 
     int bucketSize = ibucketSize; 
 
 
