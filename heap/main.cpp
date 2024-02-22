@@ -49,6 +49,31 @@ while (parentindex > 0 && heaps[newindex] > heaps[parentindex]) {
 
 
 
+
+
+void print(int count, int* heaps, int index, int indent) {
+    if (index <= count && heaps[index] != 0) {
+
+    print(count, heaps, 2 * index + 1, indent + 5);
+        // Print current node with proper indentation
+        for (int i = 0; i < indent; i++) {
+            cout << " ";
+        }
+        cout << heaps[index] << endl;        
+
+        // Print right subtree
+        print(count, heaps, 2 * index, indent + 5);
+    }
+}
+
+void remove(int *&heaps, int &count){
+
+    cout << "hi u arent doing anything"; 
+}
+
+
+
+
 int main() {
     char input[20];
     int* heaps = new int[101]; // Initialize heap array with 0s
