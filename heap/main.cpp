@@ -4,9 +4,6 @@
 
 using namespace std;
 
-void add(int *&heaps, int count, int num);
-void remove(int *&heaps, int &count);
-void print(int count, int* heaps, int index, int c); 
 
 // Function to add a new element to the heap and maintain the max heap property
 void add(int *&heaps, int count, int num) {
@@ -67,10 +64,53 @@ void print(int count, int* heaps, int index, int indent) {
 }
 
 void remove(int *&heaps, int &count){
+    //output roots value 
 
-    cout << "hi u arent doing anything"; 
+    if (count == 0 ){
+        cout << "heap is full"; 
+    }
+
+    cout << "removing root: " << heaps[1] << endl; 
+    //the first index is the root!!!!!!!
+
+    heaps[1] = heaps[count]; 
+    heaps[count] = NULL; 
+    int start = 1; 
+
+ while (true) {
+        int leftc = start * 2;
+        int rightc = start * 2 + 1;
+        int largerChild;
+
+        if (leftc <= count && rightc <= count) {
+            // Determine the larger child
+            if (heaps[leftc] > heaps[rightc]) {
+            largerChild = leftc;
+            } else {
+            largerChild = rightc;
+            }
+
+        } else if (leftc <= count) {
+            largerChild = leftc;
+        } else {
+            // No children
+            break;
+        }
+
+        if (heaps[start] < heaps[largerChild]) {
+            // Swap with the larger child
+            int temp = heaps[start];
+            heaps[start] = heaps[largerChild];
+            heaps[largerChild] = temp;
+
+            start = largerChild;
+        } else {
+            // The heap property works 
+            break;
+        }
 }
-
+    count--; //have to decrease count after each deletion 
+}
 
 
 
@@ -118,17 +158,22 @@ else if (strcmp(input, "file") == 0) {
                 cout << "Heap is Full! Cannot add more elements from the file." << endl;
                 break;  // Terminate the loop
             }
-            add(heaps, count, input);
-            count++;
+            add(heaps, count, input); //adding each input value from the file in heaps
+            count++; 
         }
-        // Call heapsort or any other operations after reading from the file
+        //call add or heapsort after reading from the file
     }
 
-    numbers.close();
+    numbers.close(); //close file
 }
  else if (strcmp(input, "delete") == 0) {
-            while (count > 0) {
+            while (count > 0) { 
+                //there has to be more than 1 to delete root 
+                //keep deleting to remove all 
                 remove(heaps, count);
+            }
+            if (count ==0){
+                cout << "heap empty" << endl; 
             }
         } else if (strcmp(input, "oneremove") == 0) {
             remove(heaps, count);
