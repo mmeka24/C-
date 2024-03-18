@@ -1,0 +1,24 @@
+#include <iostream>
+
+using namespace std;
+
+int main(){
+  char inp[50]; 
+  cout << "what do wanna do: add, remove, or print" << endl;
+  cin.getline(inp, 50);
+  if(strcmp(inp, "add") == 0){
+
+  }
+
+  else if(strcmp(inp, "remove") == 0){
+
+  }
+
+    else if(strcmp(inp, "print") == 0){
+
+  }
+
+  
+  return 0; 
+}
+
