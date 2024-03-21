@@ -1,5 +1,11 @@
+/*
+manasvi meka 
+project: bst
+*/
+
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 #include <cmath>  
 #include "node.h"
 
@@ -15,7 +21,7 @@ using namespace std;
 
 //
 
-void insert (Node*&root, int * value){
+void insert (Node*&root, int value){
 /*
 Check the value to be inserted (say X) with the value of the current node (say val) we are in:
 If X is less than val move to the left subtree.
@@ -24,31 +30,20 @@ Once the leaf node is reached, insert X to its right or left based on the relati
 
 */
 
-/*
 
+    if (root == NULL) {
+        root = new Node(value);
+    } else if (value > root->data) {
+        insert(root->right, value);
+    } else if (value < root->data) {
+        insert(root->left, value);
+    }
 
-*/
-
-if(root = NULL){
-    root = value; 
-}
-
-else if (value > root->getValue()){
-    insert(root->right, value); 
-
-}
-else if (value < root->getValue()){
-     insert(root->left, value); 
-}
-
-
-
-return root; 
 
 }
 
 
-void search (Node* root, int *value){
+void search (Node* root, int value){
 //gonna have to do the search
 //check the half point
 //if smaller go to the left 
@@ -57,15 +52,15 @@ void search (Node* root, int *value){
         cout << "not applicable root is null" << endl; 
     }
 
-    else if (value > root->getValue()){
+    else if (value > root->data){
         search(root->right, value); 
 
     }
-    else if (value < root->getValue()){
+    else if (value < root->data){
         search(root->left, value); 
     }
 
-    else if(root->getValue() == value){
+    else if(root->data == value){
         cout << "the value has been found " << endl; 
 
     }
@@ -78,87 +73,141 @@ void search (Node* root, int *value){
 
 
 
-void print (Node* root, int *value){
+void print (Node* root, int indent){
     //get print from hash 
-
-}
-
-
-void remove(Node* root, int *value){
-
-
-}
-
-
-
-
-
-int main(){
-  Node *root = NULL; 
-  char inp[50];
-  cout << "what do wanna do: add, remove, or print" << endl;
-  cin.getline(inp, 50);
-
-
-  if(strcmp(inp, "add") == 0){
-    char inp1[50];
-    cout << "manual or file? " << endl;
-    cin.getline(inp1, 50);
-    int count = 0;     
-    
-        if (strcmp(inp1, "file") == 0){
-        int input; 
-        ifstream numbers;
-        numbers.open("numbers.txt");
-
-        if (!numbers.is_open()) {
-            cout << "Error opening the file." << endl;
-        } else {
-            while (numbers >> input) {
-                if (count > 100) {
-                    cout << "Heap is Full! Cannot add more elements from the file." << endl;
-                    break;  // Terminate the loop
-                }
-                
-                count++; 
-            }
-            //call add or heapsort after reading from the file
-        }
-
-        numbers.close(); //close file
+    if (root == NULL ){
+        return; 
     }
+    indent += 5; 
+
     
+    print(root->right, indent);
 
-        if (strcmp(inp1, "addmanual") == 0) {
-            int numbers;
-            bool done = false;
-            while (!done) {
-                cout << "Enter a number between 1 and 1000. Type 0 when you are done adding." << endl;
-                cin >> numbers;
-                if (count > 100) {
-                    cout << "The heap is full." << endl;
-                } else if (numbers > 1 && numbers < 1000) {
-                    //add(heaps, count, number);
-                    count++;
-                } else if (numbers == 0) {
-                    done = true;
-                    // You may call heapsort or any other operations when done
-                } else {
-                    cout << "Invalid input. Please enter a number between 1 and 1000." << endl;
-                }
-            }
-        } 
-  }
-  
-    else if(strcmp(inp, "remove") == 0){
 
-  }
+    for (int i = 0; i < indent; i++) {
+        cout << " ";
+    }
+   
+    cout << root->data << endl;
 
-    else if(strcmp(inp, "print") == 0){
-
-  }
-
-  
-  return 0; 
+    print(root->left, indent);
+    
 }
+
+
+void remove(Node*& root, int value) {
+    if (root == NULL) {
+        cout << "the tree is empty cannot delete" << endl;
+        return;
+    }
+
+    // Recursive calls for ancestors of node to be deleted
+    else if (root->data > value) {
+        remove(root->left, value);
+    } else if (root->data < value) {
+        remove(root->right, value);
+    }
+
+    // We reach here when root is the node to be deleted.
+    else if (root->data == value) {
+        if (root->left == NULL && root->right == NULL) {
+            // No children
+            cout << "deleting" << value << endl;
+            delete root;
+            root = NULL;
+        } else if (root->left == NULL) {
+            // One child (right)
+            Node* temp = root->right;
+            delete root;
+            root = temp;
+        } else if (root->right == NULL) {
+            // One child (left)
+            Node* temp = root->left;
+            delete root;
+            root = temp;
+        } else {
+            // Two children
+            cout << "deleting: " << value << endl;
+            Node* temp = root->right;
+            while (temp->left != NULL) {
+                temp = temp->left;
+            }
+            root->data = temp->data;
+            remove(root->right, temp->data); // Remove the duplicate node in the right subtree
+        }
+    } else {
+        cout << "uh i have no idea what's going on, your value doesn't exist" << endl;
+    }
+}
+
+
+
+
+
+
+
+
+int main() {
+    Node* root = NULL;
+    bool quit = false;
+
+
+    while (!quit) {
+        char inp[50];
+    cout << "What do you want to do: add, remove, or print?" << endl;
+
+        cin.getline(inp, 50);
+
+        if (strcmp(inp, "add") == 0) {
+            cout << "Do you want to add numbers manually or from a file?" << endl;
+            cout << "Enter 'manual' for manual input or 'file' for file input: ";
+            char input_method[50];
+            cin.getline(input_method, 50);
+            
+            if (strcmp(input_method, "manual") == 0) {
+                int numbers;
+                while (true) {
+                    cout << "Enter a number between 1 and 1000. Type 0 when you are done adding." << endl;
+                    cin >> numbers;
+                    cin.ignore(); // Ignore newline character after input
+                    if (numbers == 0) {
+                        break;
+                    }
+                    insert(root, numbers);
+                }
+            } else if (strcmp(input_method, "file") == 0) {
+                ifstream file;
+                file.open("numbers.txt");
+                if (!file.is_open()) {
+                    cout << "Error opening the file." << endl;
+                } else {
+                    int number;
+                    while (file >> number) {
+                        insert(root, number);
+                    }
+                    file.close();
+                }
+            } else {
+                cout << "Invalid input method." << endl;
+            }
+        } else if (strcmp(inp, "remove") == 0) {
+            int num_to_remove;
+            cout << "Enter the number you want to remove: ";
+            cin >> num_to_remove;
+            remove(root, num_to_remove);
+            cin.ignore(); // Ignore newline character after input
+        } else if (strcmp(inp, "print") == 0) {
+
+            cout << "Printing tree:" << endl;
+            print(root,0);
+            cout << endl;
+        } else {
+            cout << "Ending the program." << endl;
+            quit = true;
+        }
+    }
+
+    return 0;
+}
+
 

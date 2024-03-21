@@ -1,16 +1,7 @@
-// NODE.H
-#ifndef NODE_H
-#define NODE_H
-
-#include <iostream>
-#include <cstring>
-
-using namespace std;
-
 class Node {
 public:
     // Constructor
-    Node(char* newData);
+    Node(int newData);
     ~Node();
 
     void setNext(Node*);
@@ -19,14 +10,13 @@ public:
     void setLeft(Node*);
     Node* getLeft();
     Node* getRight();
-    char* getValue(); // 
+    int getValue(); //return type = int 
+    int getData(); 
 
-private:
     // Pointers
     Node* next;
     Node* left;
     Node* right;
-    char* value; // the data of the llist 
+    char* dataStr; 
+    int data; //  variable to hold integer data
 };
-
-#endif

@@ -1,4 +1,3 @@
-// NODE.CPP
 #include <iostream>
 #include <cstring>
 #include "node.h"
@@ -6,13 +5,13 @@
 using namespace std;
 
 // Construct node given data
-Node::Node(char* newData) {
-    value = new char[strlen(newData) + 1];
-    strcpy(value, newData); //copying newData to value 
-    next = NULL;
-    left = NULL;
-    right = NULL;
+Node::Node(int newData) {
+    data = newData;
+    next = nullptr;
+    left = nullptr;
+    right = nullptr;
 }
+
 
 // Get next node
 Node* Node::getLeft() {
@@ -29,9 +28,9 @@ Node* Node::getNext() {
     return next;
 }
 
-// Get node value
-char* Node::getValue() {
-    return value;
+// Get node value (assuming data is an integer)
+int Node::getValue() {
+    return data;
 }
 
 // Set next node
@@ -51,5 +50,5 @@ void Node::setRight(Node* newRight) {
 
 // Destructor for node
 Node::~Node() {
-    delete[] value;
+    // No need to delete data
 }
