@@ -1,6 +1,7 @@
 /*
 manasvi meka 
 project: bst
+update: actually added the search function in main! 
 */
 
 #include <iostream>
@@ -49,7 +50,7 @@ void search (Node* root, int value){
 //if smaller go to the left 
 //if greater go to the right
     if(root == NULL){
-        cout << "not applicable root is null" << endl; 
+        cout << "the value ur trying to find doesn't exist. sorry!" << endl; 
     }
 
     else if (value > root->data){
@@ -67,7 +68,6 @@ void search (Node* root, int value){
 
     else{
         cout << "the value ur trying to find doesn't exist. sorry!" << endl; 
-
     }
 }
 
@@ -97,7 +97,7 @@ void print (Node* root, int indent){
 
 void remove(Node*& root, int value) {
     if (root == NULL) {
-        cout << "the tree is empty cannot delete" << endl;
+        cout << "the num doesn't exist" << endl;
         return;
     }
 
@@ -133,8 +133,8 @@ void remove(Node*& root, int value) {
                 temp = temp->left;
             }
             root->data = temp->data;
-            remove(root->right, temp->data); // Remove the duplicate node in the right subtree
-        }
+            remove(root->right, temp->data); // Corrected: remove from the right subtree of the node to delete
+}
     } else {
         cout << "uh i have no idea what's going on, your value doesn't exist" << endl;
     }
@@ -154,7 +154,7 @@ int main() {
 
     while (!quit) {
         char inp[50];
-    cout << "What do you want to do: add, remove, or print?" << endl;
+    cout << "What do you want to do: add, remove, search or print?" << endl;
 
         cin.getline(inp, 50);
 
@@ -201,7 +201,19 @@ int main() {
             cout << "Printing tree:" << endl;
             print(root,0);
             cout << endl;
-        } else {
+        } 
+        
+        else if (strcmp(inp, "search") == 0) {
+            int num = 0; 
+            cout << "what num r u searching" << endl; 
+            cin >> num; 
+            cout << "searching tree:" << endl;
+            search(root, num);
+            cout << endl;
+        } 
+        
+        
+        else if (strcmp(inp, "quit") == 0){
             cout << "Ending the program." << endl;
             quit = true;
         }
