@@ -1,3 +1,9 @@
+/*
+name: manasvi meka 
+red black tree insertion only 
+may 2nd, 2024
+*/
+
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -98,9 +104,9 @@ void insert2(Node *& root, Node *& node){
     //CASE 2: Z'S UNCLE IS RED
     //0 is black 
     //1 is red
-     if (node == nullptr || node->parent == nullptr) {
+     /*if (node == nullptr || node->parent == nullptr) {
         return; // Ensure node and its parent are not null
-    }
+    }*/
 
 
 
@@ -115,7 +121,7 @@ void insert2(Node *& root, Node *& node){
         // if parent is black
         return;
     }
-    else if ((getUncle(node)->getColor()) == 1 && getUncle(node)!= NULL) { 
+    else if ((getUncle(node)!= NULL && getUncle(node)->getColor()) == 1) { 
         // if uncle is red
         
       /*  1) z's parents and uncle are black 
@@ -131,6 +137,7 @@ void insert2(Node *& root, Node *& node){
 
     else{
     //if uncle is black 
+    //https://www.codesdope.com/course/data-structures-red-black-trees-insertion/
     Node *parent = node->getParent(); 
     Node *grandparent = getGrandparent(node); 
         if (node == parent->right && parent == grandparent->left) { // if node is right child and parent is left child
@@ -164,6 +171,7 @@ void insert2(Node *& root, Node *& node){
 
 
 void rotateLeft(Node *& root, Node *& node){
+    //https://www.codesdope.com/course/data-structures-red-black-trees-insertion/
     cout << "rotating left function L)" << endl; 
     Node *y = node->right; 
     node->right = y->left; 
@@ -172,7 +180,6 @@ void rotateLeft(Node *& root, Node *& node){
         y->left->parent = node; // Update the parent pointer of y->left
     }
     
-    y->left = node;
     y->parent = node->parent;
     if(node->parent == NULL){
         //x is root
@@ -189,9 +196,10 @@ void rotateLeft(Node *& root, Node *& node){
     else{
         //putting it as a right child
         node->parent->right = y; 
-        cout << "u are not the right child "<< endl; 
+        cout << "u are now the right child "<< endl; 
     }
 
+    y->left = node;
     node->parent = y; 
 }
 
@@ -323,25 +331,45 @@ int main(){
 
     while (!quit){
         char inp [50]; 
-        cout << "what would you like to do" << endl; 
+        cout << "what would you like to do: addmanual, addfile, print, or quit" << endl; 
         cin.getline(inp, 50); 
 
-        if (strcmp(inp, "add") == 0) {
+
+        if(strcmp(inp, "addmanual") == 0){
             int inputn; 
             cout << "please enter a number from 1 - 999. " << endl; 
             cin >> inputn; 
             cin.ignore(); 
 
-            if(inputn > 1 && inputn < 999){
-                Node *node = new Node(inputn, 1); 
-                insert(root, node); 
-                insert2(root, node);  
-        }
+                if(inputn > 1 && inputn < 999){
+                    Node *node = new Node(inputn, 1); 
+                    insert(root, node); 
+                    insert2(root, node);  
+                }
+                else{
+                    cout << "something wrong"; 
+                }
+            }
+         
+         
+         
+     else if(strcmp(inp, "addfile") == 0){
+                ifstream file;
+                file.open("numbers.txt");
+                    if (!file.is_open()) {
+                        cout << "Error opening the file." << endl;
+                    } 
+                    
+                    else {
+                        int number;
+                        while (file >> number) {
+                            Node *node = new Node(number, 1); 
+                            insert(root, node); 
+                            insert2(root, node); 
+                        }
+                        file.close();  
+                } 
 
-        else{
-            cout << "invalid input " << endl; 
-        }
-            
             }
         
 
