@@ -1,27 +1,28 @@
 /*
-name: manasvi meka 
-red black tree insertion only 
-may 2nd, 2024
+manasvi meka 
+may 23rd 2024 
+project: red black tree deletion. added 4 functions: search, transplant, deletion, and delete fix!
 */
 
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <cmath> 
-#include <cstring>   
+#include <cmath>
+#include <cstring>
 #include "node.h"
 
-using namespace std; 
+using namespace std;
 
+// FUNCTION PROTOTYPES FOR ROTATE LEFT AND ROTATE RIGHT
 
-//FUNCTION PROTOTYPES FOR ROTATE LEFT AND ROTATE RIGHT
-void rotateLeft(Node *& root, Node *& node); 
+void rotateLeft(Node *& root, Node *& node);
 void rotateRight(Node *& root, Node *& node);
-void del2(Node *& root, Node *& node); 
-void del(Node *& root, Node *& node); 
+void del2(Node *& root, Node *& node);
+void del(Node *& root, Node *& node);
+void insert(Node *& root, Node *& node);
+void insert2(Node *& root, Node *& node);
 
-
-
+// Get grandparent node
 Node* getGrandparent(Node *& b) {
     Node* parent = b->getParent();
     if (parent != nullptr && parent->getParent() != nullptr) {
@@ -60,21 +61,12 @@ Node* getUncle(Node *& b) {
     }
 }
 
-Node * minimum(Node *x){
-    while(x->left != NULL){
-        x = x->left; 
+// Find the minimum node in a subtree
+Node* minimum(Node *x) {
+    while (x->getLeft() != NULL) {
+        x = x->getLeft();
     }
-}
-
-Node *wnode(Node *& root, int value){
-    //writing the search function to store this node as node to be deleted
-    if (root == NULL || root->data == value) { // if tree is empty or node is found
-        return root;
-    }
-    if (root->data < value) { // if node is greater than root
-        return wnode(root->right, value);
-    }
-    return wnode(root->left, value);
+    return x;
 }
 
 
@@ -186,343 +178,263 @@ void insert2(Node *& root, Node *& node){
 
 }
 
-
-
-void rotateLeft(Node *& root, Node *& node){
-    //https://www.codesdope.com/course/data-structures-red-black-trees-insertion/
-    cout << "rotating left function L)" << endl; 
-    Node *y = node->right; 
-    node->right = y->left; 
-
-    if(y->left != NULL){
-        y->left->parent = node; // Update the parent pointer of y->left
+// Function to replace one subtree as a child of its parent with another subtree
+//gonna be used in the del funciton 
+void transplant(Node *& root, Node *& u, Node *& v) {
+    if (u->getParent() == NULL) {
+        root = v;
+    } else if (u == u->getParent()->getLeft()) {
+        u->getParent()->setLeft(v);
+    } else {
+        u->getParent()->setRight(v);
     }
-    
-    y->parent = node->parent;
-    if(node->parent == NULL){
-        //x is root
-        root = y; 
-        cout << "u are now root " << endl; 
-    }    
-
-    else if(node == node->parent->left){
-        //putting it as a left child
-        node->parent->left = y; 
-        cout << "u are now the left child" << endl; 
+    if (v != NULL) {
+        v->setParent(u->getParent());
     }
-
-    else{
-        //putting it as a right child
-        node->parent->right = y; 
-        cout << "u are now the right child "<< endl; 
-    }
-
-    y->left = node;
-    node->parent = y; 
 }
 
-/*
-void rotateLeft(Node *& root, Node *& node){
-    cout << "rotating left function L)" << endl; 
-    Node *y = node->getRight(); 
-    node->setRight(y->getLeft()); 
+// Function to delete a node from the Red-Black Tree
+//code scape deletion 
+void del(Node *& root, Node *& node) {
+    Node *y = node;
+    Node *x;
+    int original_color = y->getColor();
 
-    if(y->getLeft() != NULL){
-        y->getLeft()->setParent(node); // Update the parent pointer of y->left
+    if (node->getLeft() == NULL) {
+        //CASE 1 LEFT IS NULL
+        x = node->getRight();
+        transplant(root, node, node->right);
+    } else if (node->getRight() == NULL) {
+        //CASE 2 RIGHT IS NULL 
+        x = node->getLeft();
+        transplant(root, node, node->left);
+    } else {
+        //CASE 3 - 2 CHILDREN BEGIN BY FINDING MIN 
+        y = minimum(node->getRight());
+        original_color = y->getColor();
+        x = y->getRight();
+        if (y->getParent() == node && x != NULL) {
+            x->setParent(y);
+        } else {
+            transplant(root, y, y->right);
+            y->setRight(node->getRight());
+            if (y->getRight() != NULL) {
+                y->getRight()->setParent(y);
+            }
+        }
+        transplant(root, node, y);
+        y->setLeft(node->getLeft());
+        //CHECKING IF GETFLEFT IS NULL BEFORE SETTING THE PARENT
+        //FIXED!!!!!!!!
+        if (y->getLeft() != NULL) {
+            y->getLeft()->setParent(y);
+        }
+        y->setColor(node->getColor());
     }
-    
+
+    if (original_color == 0 && x != NULL) {
+        del2(root, x);
+    } else if (original_color == 0) {
+        del2(root, y->parent);
+    }
+}
+
+
+// Function to fix the Red-Black Tree properties after deletion
+//programizz pseudo code 
+void del2(Node *& root, Node *& node) {
+    while (node != root && node->getColor() == 0) {
+        if (node == node->getParent()->getLeft()) {
+            Node *w = getSibling(node);
+            if (w->getColor() == 1) {
+                w->setColor(0);
+                node->getParent()->setColor(1);
+                rotateLeft(root, node->parent);
+                w = getSibling(node);
+            }
+            if (w->getLeft()->getColor() == 0 && w->getRight()->getColor() == 0) {
+                w->setColor(1);
+                node = node->getParent();
+            } else {
+                if (w->getRight()->getColor() == 0) {
+                    w->getLeft()->setColor(0);
+                    w->setColor(1);
+                    rotateRight(root, w);
+                    w = getSibling(node);
+                }
+                w->setColor(node->getParent()->getColor());
+                node->getParent()->setColor(0);
+                w->getRight()->setColor(0);
+                rotateLeft(root, node->parent);
+                node = root;
+            }
+        } else {
+            Node *w = getSibling(node);
+            if (w->getColor() == 1) {
+                w->setColor(0);
+                node->getParent()->setColor(1);
+                rotateRight(root, node->parent);
+                w = getSibling(node);
+            }
+            if (w->getLeft()->getColor() == 0 && w->getRight()->getColor() == 0) {
+                w->setColor(1);
+                node = node->getParent();
+            } else {
+                if (w->getLeft()->getColor() == 0) {
+                    w->getRight()->setColor(0);
+                    w->setColor(1);
+                    rotateLeft(root, w);
+                    w = getSibling(node);
+                }
+                w->setColor(node->getParent()->getColor());
+                node->getParent()->setColor(0);
+                w->getLeft()->setColor(0);
+                rotateRight(root, node->parent);
+                node = root;
+            }
+        }
+    }
+    node->setColor(0);
+}
+
+// Function to perform left rotation
+void rotateLeft(Node *& root, Node *& node) {
+    Node *y = node->getRight();
+    node->setRight(y->getLeft());
+    if (y->getLeft() != NULL) {
+        y->getLeft()->setParent(node);
+    }
     y->setParent(node->getParent());
-    if(node->getParent() == NULL){
-        //x is root
-        root = y; 
-        cout << "u are now root " << endl; 
-    }    
-
-    else if(node == node->getParent()->getLeft()){
-        //putting it as a left child
-        node->getParent()->setLeft(y); 
-        cout << "u are now the left child" << endl; 
+    if (node->getParent() == NULL) {
+        root = y;
+    } else if (node == node->getParent()->getLeft()) {
+        node->getParent()->setLeft(y);
+    } else {
+        node->getParent()->setRight(y);
     }
-
-    else{
-        //putting it as a right child
-        node->getParent()->setRight(y); 
-        cout << "u are not the right child "<< endl; 
-    }
-
     y->setLeft(node);
-    node->setParent(y); 
-}*/
+    node->setParent(y);
+}
 
-
-void rotateRight(Node *& root, Node *& node){
-    cout << "rotating the function to the right" << endl; 
-    Node *y = node->getLeft(); 
-    node->setLeft(y->getRight()); 
-
-    if(y->getRight() != NULL){
-        y->getRight()->setParent(node); // Update the parent pointer of y->right
+// Function to perform right rotation
+void rotateRight(Node *& root, Node *& node) {
+    Node *y = node->getLeft();
+    node->setLeft(y->getRight());
+    if (y->getRight() != NULL) {
+        y->getRight()->setParent(node);
     }
-
     y->setParent(node->getParent());
-
-    if(node->getParent() == NULL){
-        root = y; 
-        cout << "u are now root " << endl; 
+    if (node->getParent() == NULL) {
+        root = y;
+    } else if (node == node->getParent()->getRight()) {
+        node->getParent()->setRight(y);
+    } else {
+        node->getParent()->setLeft(y);
     }
-
-    else if(node == node->getParent()->getRight()){
-        node->getParent()->setRight(y); 
-        cout << "u are now the right child" << endl; 
-    }
-    else {
-        node->getParent()->setLeft(y); // Update the left child of node's parent
-        cout << "u are now the left child" << endl; 
-    }
-
     y->setRight(node);
     node->setParent(y);
 }
 
-/*void rotateRight(Node *& root, Node *& node){
-    cout << "rotating the function to the right" << endl; 
-    Node *y = node->left; 
-    node->left = y->right; 
-
-    if(y->right != NULL){
-        y->right->parent = node; // Update the parent pointer of y->right
+// Function to print the tree
+void print(Node *& root, int indent) {
+    if (root == NULL) {
+        return;
     }
-
-    y->right = node;
-    y->parent = node->parent;
-
-    if(node->parent == NULL){
-        root = y; 
-        cout << "u are now root " << endl; 
-    }
-
-    else if(node == node->parent->right){
-        node->parent->right = y; 
-        cout << "u are now the right child" << endl; 
-    }
-    else {
-        node->parent->left = y; // Update the left child of node's parent
-        cout << "u are now the left child" << endl; 
-    }
-
-    node->parent = y;
-
-   // y->right = node; // Update the right child of y
-    //node->parent = y; // Update the parent of node
-}*/
-
-void print(Node *& root, int indent){
-    if(root == NULL){
-        return; 
-    }
-
-    indent += 10; 
-
+    indent += 10;
     print(root->right, indent);
-
-    for (int i = 10; i < indent; i++) { // prints the indent
-          cout << " ";
+    for (int i = 10; i < indent; i++) {
+        cout << " ";
     }
     cout << root->data;
-    if (root->getColor() == 1) { // prints the color of the node
+    if (root->getColor() == 1) {
         cout << " (R)" << endl;
-    }
-    else { // prints the color of the node
+    } else {
         cout << " (B)" << endl;
     }
-    
     print(root->left, indent);
-
-
 }
 
-
-
-
-void transplant(Node *& root, Node *& u, Node *& v){
-if(u->parent == NULL){
-    root = v; 
-}
-else if(u == u->parent->left){
-    u->parent->left = v; 
-}
-else{
-    u->parent->right = v; 
-}
-v->parent = u->parent; 
-
-}
-
-//the func to del 
-void del(Node *& root, Node *& node){
-/*
-https://www.codesdope.com/course/data-structures-red-black-trees-deletion/
-cases of the rbt 
-1) when left child is null 
-2) when right child is null 
-3) when both childs are null
-*/
-    y = node;
-    Node *x; 
-    int initialcolor = y->getColor(); 
-
-    if(node->left == NULL){
-        x = node->right; 
-        transplant(root, node, node->right); 
+// Function to search a node
+Node* search(Node *& root, int value) {
+    if (root == NULL || root->data == value) {
+        return root;
     }
-
-    else if(node->right == NULL){
-       x = node->left; 
-       transplant(root, node, node->left);  
-    } 
-
-    //write a minimum function to find the minimum of tree when both childs are null
-    else{
-        y = minimum(node->right); 
-        initialcolor = y->getColor(); 
-        x = y->right; 
-        if(y->parent == node){
-            x->parent = node;
-        }
-
-        else {
-        rb_transplant(root, y, y->right);
-        y->right = node->right;
-        y->right->parent = y;
-        }
-        rb_transplant(root, z, y);
-        y->left = node->left;
-        y->left->parent = y;
-        y->color = node->color;
-}
-//0 is black and 1 is red 
-if(initialcolor == 0)
-  del2(root, x);
-
+    if (root->data < value) {
+        return search(root->right, value);
+    }
+    return search(root->left, value);
 }
 
+// Main function
+int main() {
+    Node *root = NULL;
+    bool quit = false;
 
+    while (!quit) {
+        char inp[50];
+        cout << "What would you like to do: addmanual, addfile, delete, search, print, or quit?" << endl;
+        cin.getline(inp, 50);
 
-void search (Node* root, int value){
-//gonna have to do the search
-//check the half point
-//if smaller go to the left 
-//if greater go to the right
-    if(root == NULL){
-        cout << "the value ur trying to find doesn't exist. sorry!" << endl; 
-    }
+        if (strcmp(inp, "addmanual") == 0) {
+            int inputn;
+            cout << "Please enter a number from 1 - 999. " << endl;
+            cin >> inputn;
+            cin.ignore();
 
-    else if (value > root->data){
-        search(root->right, value); 
-
-    }
-    else if (value < root->data){
-        search(root->left, value); 
-    }
-
-    else if(root->data == value){
-        cout << "the value has been found " << endl; 
-
-    }
-
-    else{
-        cout << "the value ur trying to find doesn't exist. sorry!" << endl; 
-    }
-}
-
-
-
-
-
-
-//the fix up
-void del2(Node *& root, Node *& node){
-//https://www.programiz.com/dsa/deletion-from-a-red-black-tree
-/*
-properties of red black tree.
-
-
-*/
-
-
-
-
-
-
-}
-
-int main(){
-    Node *root = NULL; 
-
-    bool quit = false; 
-
-    while (!quit){
-        char inp [50]; 
-        cout << "what would you like to do: addmanual, addfile, print, or quit" << endl; 
-        cin.getline(inp, 50); 
-
-
-        if(strcmp(inp, "addmanual") == 0){
-            int inputn; 
-            cout << "please enter a number from 1 - 999. " << endl; 
-            cin >> inputn; 
-            cin.ignore(); 
-
-                if(inputn > 1 && inputn < 999){
-                    Node *node = new Node(inputn, 1); 
-                    insert(root, node); 
-                    insert2(root, node);  
-                }
-                else{
-                    cout << "something wrong"; 
-                }
+            if (inputn > 1 && inputn < 999) {
+                Node *node = new Node(inputn, 1);
+                insert(root, node);
+                insert2(root, node);
+            } else {
+                cout << "Invalid input." << endl;
             }
-         
-         
-         
-     else if(strcmp(inp, "addfile") == 0){
-                ifstream file;
-                file.open("numbers.txt");
-                    if (!file.is_open()) {
-                        cout << "Error opening the file." << endl;
-                    } 
-                    
-                    else {
-                        int number;
-                        while (file >> number) {
-                            Node *node = new Node(number, 1); 
-                            insert(root, node); 
-                            insert2(root, node); 
-                        }
-                        file.close();  
-                } 
-
+        } else if (strcmp(inp, "addfile") == 0) {
+            ifstream file;
+            file.open("numbers.txt");
+            if (!file.is_open()) {
+                cout << "Error opening the file." << endl;
+            } else {
+                int number;
+                while (file >> number) {
+                    Node *node = new Node(number, 1);
+                    insert(root, node);
+                    insert2(root, node);
+                }
+                file.close();
             }
-        
-
-        else if (strcmp(inp, "print") == 0){
-            cout << "i will be printing" << endl; 
-            print(root, 0); 
-            cout << endl; 
-            quit = false;  
-
-        }
-
-        else{
-            quit = true; 
+        } else if (strcmp(inp, "print") == 0) {
+            cout << "Printing the tree:" << endl;
+            print(root, 0);
+            cout << endl;
+        } else if (strcmp(inp, "delete") == 0) {
+            int value;
+            cout << "Enter the value to delete: ";
+            cin >> value;
+            cin.ignore();
+            Node* node = search(root, value);
+            if (node != NULL) {
+                del(root, node);
+                cout << "Node with value " << value << " deleted." << endl;
+            } else {
+                cout << "Value not found in the tree." << endl;
+            }
+        } else if (strcmp(inp, "search") == 0) {
+            int value;
+            cout << "What value are you searching for: ";
+            cin >> value;
+            cin.ignore();
+            Node* node = search(root, value);
+            if (node != NULL) {
+                cout << "Node with value " << value << " has been found." << endl;
+            } else {
+                cout << "Value not found in the tree." << endl;
+            }
+        } else if (strcmp(inp, "quit") == 0) {
+            quit = true;
+        } else {
+            cout << "Invalid command." << endl;
         }
     }
+
+    return 0;
 }
-
-
-
-
-
-
-
-
