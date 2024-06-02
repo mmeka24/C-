@@ -12,10 +12,9 @@ Node::Node(int newData, int newColor) {
 }
 
 // Destructor for node
-Node::~Node() {
-    delete left;
-    delete right;
-    // No need to delete next
+Node::~Node(){
+
+    
 }
 
 // Get next node

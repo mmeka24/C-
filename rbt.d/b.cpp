@@ -17,10 +17,19 @@ using namespace std;
 
 void rotateLeft(Node *& root, Node *& node);
 void rotateRight(Node *& root, Node *& node);
-void del2(Node *& root, Node *& node);
-void del(Node *& root, Node *& node);
+//void del2(Node *& root, Node *& node);
+//void del(Node *& root, Node *& node);
 void insert(Node *& root, Node *& node);
 void insert2(Node *& root, Node *& node);
+Node* search(Node *& root, int value);
+
+void fixDeleteRBTree(Node *& root, Node *&node);
+Node* del(Node *&root, int data);
+void deleteValue(Node *& root, int data);
+
+
+Node* getGrandparent(Node *& b);
+
 
 // Get grandparent node
 Node* getGrandparent(Node *& b) {
@@ -63,8 +72,14 @@ Node* getUncle(Node *& b) {
 
 // Find the minimum node in a subtree
 Node* minimum(Node *x) {
-    while (x->getLeft() != NULL) {
-        x = x->getLeft();
+    while (x->left != NULL) {
+        x = x->left;
+    }
+    return x;
+}
+Node* maximum(Node *x) {
+    while (x->right != NULL) {
+        x = x->right;
     }
     return x;
 }
@@ -179,123 +194,176 @@ void insert2(Node *& root, Node *& node){
 }
 
 // Function to replace one subtree as a child of its parent with another subtree
-//gonna be used in the del funciton 
-void transplant(Node *& root, Node *& u, Node *& v) {
-    if (u->getParent() == NULL) {
+
+
+//swapping the vals
+
+void transplant(Node*& root, Node*& u, Node*& v) {
+    if (u->getParent() == nullptr) {
         root = v;
     } else if (u == u->getParent()->getLeft()) {
         u->getParent()->setLeft(v);
     } else {
         u->getParent()->setRight(v);
     }
-    if (v != NULL) {
+    if (v != nullptr) {
         v->setParent(u->getParent());
     }
 }
 
-// Function to delete a node from the Red-Black Tree
-//code scape deletion 
-void del(Node *& root, Node *& node) {
-    Node *y = node;
-    Node *x;
-    int original_color = y->getColor();
+//delete fix algorithm 
+void fixDeleteRBTree(Node *& root, Node *&node) {
+    if (node == nullptr) {
+        return;
+    }
 
-    if (node->getLeft() == NULL) {
-        //CASE 1 LEFT IS NULL
-        x = node->getRight();
-        transplant(root, node, node->right);
-    } else if (node->getRight() == NULL) {
-        //CASE 2 RIGHT IS NULL 
-        x = node->getLeft();
-        transplant(root, node, node->left);
+    if (node == root) {
+        root = nullptr;
+        return;
+    }
+
+    if (node->getColor() == 1 || (node->left != nullptr && node->left->getColor() == 1) || (node->right != nullptr && node->right->getColor() == 1)) {
+       //if node to be deleted is red or has red child reove the node and replace with child 
+       //make child black 
+       
+        Node *child;
+        if (node->left != nullptr) {
+            child = node->left;
+        } else {
+            child = node->right;
+        }
+        if (node == node->parent->left) {
+            node->parent->left = child;
+            if (child != nullptr)
+                child->parent = node->parent;
+            if (child != nullptr) 
+                child->setColor(0);
+            delete node;
+        } else {
+            node->parent->right = child;
+            if (child != nullptr)
+                child->parent = node->parent;
+            if (child != nullptr) child->setColor(0);
+            delete node;
+        }
     } else {
-        //CASE 3 - 2 CHILDREN BEGIN BY FINDING MIN 
-        y = minimum(node->getRight());
-        original_color = y->getColor();
-        x = y->getRight();
-        if (y->getParent() == node && x != NULL) {
-            x->setParent(y);
-        } else {
-            transplant(root, y, y->right);
-            y->setRight(node->getRight());
-            if (y->getRight() != NULL) {
-                y->getRight()->setParent(y);
+        //DOUBLE BALCKS 
+        Node *sibling = nullptr;
+        Node *parent = nullptr;
+        Node *ptr = node;
+        //double black is when black or null 
+        while (ptr != root && (ptr == nullptr || ptr->getColor() == 0)) {
+            parent = ptr->parent;
+            if (ptr == parent->left) {
+                sibling = parent->right;
+                //c1 sibiling is red 
+                if (sibling->getColor() == 1) {
+                    sibling->setColor(0);
+                    parent->setColor(1);
+                    rotateLeft(root, parent);
+                } 
+                //sib is black with two black children 
+                else {
+                    if ((sibling->left == nullptr || sibling->left->getColor() == 0) && (sibling->right == nullptr || sibling->right->getColor() == 0)) {
+                        sibling->setColor(1);
+                        if (parent->getColor() == 1)
+                            parent->setColor(0);
+                        else
+                            parent->setColor(2);
+                        ptr = parent;
+                    } 
+                    //c3 sib is black with atleast one red child
+                    else {
+                        if (sibling->right == nullptr || sibling->right->getColor() == 0) {
+                            if (sibling->left != nullptr) sibling->left->setColor(0);
+                            sibling->setColor(1);
+                            rotateRight(root, sibling);
+                            sibling = parent->right;
+                        }
+                        sibling->setColor(parent->getColor());
+                        parent->setColor(0);
+                        if (sibling->right != nullptr) sibling->right->setColor(0);
+                        rotateLeft(root, parent);
+                        break;
+                    }
+                }
+            } else {
+                //sib is red 
+                sibling = parent->left;
+                if (sibling->getColor() == 1) {
+                    sibling->setColor(0);
+                    parent->setColor(1);
+                    rotateRight(root, parent);
+                } 
+                
+                else {
+                    //sib is black with 2 black children 
+                    if ((sibling->left == nullptr || sibling->left->getColor() == 0) && (sibling->right == nullptr || sibling->right->getColor() == 0)) {
+                        sibling->setColor(1);//red
+                        if (parent->getColor() == 1)
+                            parent->setColor(0);//b
+                        else
+                            parent->setColor(2);
+                        ptr = parent;
+                    } else {
+                        //sib is black with atleast one red child
+                        if (sibling->left == nullptr || sibling->left->getColor() == 0) {
+                            if (sibling->right != nullptr) sibling->right->setColor(0);
+                            sibling->setColor(1);
+                            rotateLeft(root, sibling);
+                            sibling = parent->left;
+                        }
+                        sibling->setColor(parent->getColor());
+                        parent->setColor(0);
+                        if (sibling->left != nullptr) sibling->left->setColor(0);
+                        rotateRight(root, parent);
+                        break;
+                    }
+                }
             }
         }
-        transplant(root, node, y);
-        y->setLeft(node->getLeft());
-        //CHECKING IF GETFLEFT IS NULL BEFORE SETTING THE PARENT
-        //FIXED!!!!!!!!
-        if (y->getLeft() != NULL) {
-            y->getLeft()->setParent(y);
-        }
-        y->setColor(node->getColor());
-    }
-
-    if (original_color == 0 && x != NULL) {
-        del2(root, x);
-    } else if (original_color == 0) {
-        del2(root, y->parent);
+        if (node == node->parent->left)
+            node->parent->left = nullptr;
+        else
+            node->parent->right = nullptr;
+        delete node;
+        if (root != nullptr) root->setColor(0); //root = blacl
     }
 }
 
 
-// Function to fix the Red-Black Tree properties after deletion
-//programizz pseudo code 
-void del2(Node *& root, Node *& node) {
-    while (node != root && node->getColor() == 0) {
-        if (node == node->getParent()->getLeft()) {
-            Node *w = getSibling(node);
-            if (w->getColor() == 1) {
-                w->setColor(0);
-                node->getParent()->setColor(1);
-                rotateLeft(root, node->parent);
-                w = getSibling(node);
-            }
-            if (w->getLeft()->getColor() == 0 && w->getRight()->getColor() == 0) {
-                w->setColor(1);
-                node = node->getParent();
-            } else {
-                if (w->getRight()->getColor() == 0) {
-                    w->getLeft()->setColor(0);
-                    w->setColor(1);
-                    rotateRight(root, w);
-                    w = getSibling(node);
-                }
-                w->setColor(node->getParent()->getColor());
-                node->getParent()->setColor(0);
-                w->getRight()->setColor(0);
-                rotateLeft(root, node->parent);
-                node = root;
-            }
-        } else {
-            Node *w = getSibling(node);
-            if (w->getColor() == 1) {
-                w->setColor(0);
-                node->getParent()->setColor(1);
-                rotateRight(root, node->parent);
-                w = getSibling(node);
-            }
-            if (w->getLeft()->getColor() == 0 && w->getRight()->getColor() == 0) {
-                w->setColor(1);
-                node = node->getParent();
-            } else {
-                if (w->getLeft()->getColor() == 0) {
-                    w->getRight()->setColor(0);
-                    w->setColor(1);
-                    rotateLeft(root, w);
-                    w = getSibling(node);
-                }
-                w->setColor(node->getParent()->getColor());
-                node->getParent()->setColor(0);
-                w->getLeft()->setColor(0);
-                rotateRight(root, node->parent);
-                node = root;
-            }
-        }
+Node* del(Node *&root, int data) {
+    if (root == nullptr) {
+        return root;
     }
-    node->setColor(0);
+//traverse through left if root is higher 
+    if (data < root->data) {
+        return del(root->left, data);
+    }
+
+    //traverse through left if root is higher 
+
+
+    if (data > root->data) {
+        return del(root->right, data);
+    }
+
+    if (root->left == nullptr || root->right == nullptr) {
+        return root;
+    }
+    //finding min of right aka sucessor 
+    Node *temp = minimum(root->right);
+    root->data = temp->data;
+    return del(root->right, temp->data);
 }
+
+
+void deleteValue(Node *& root, int data) {
+    //finding node to delete calling in main
+    Node *node = del(root, data);
+    fixDeleteRBTree(root, node);
+}
+
 
 // Function to perform left rotation
 void rotateLeft(Node *& root, Node *& node) {
@@ -318,6 +386,7 @@ void rotateLeft(Node *& root, Node *& node) {
 
 // Function to perform right rotation
 void rotateRight(Node *& root, Node *& node) {
+    cout << "i conducted rr" << endl;
     Node *y = node->getLeft();
     node->setLeft(y->getRight());
     if (y->getRight() != NULL) {
@@ -407,17 +476,15 @@ int main() {
             print(root, 0);
             cout << endl;
         } else if (strcmp(inp, "delete") == 0) {
+            
             int value;
             cout << "Enter the value to delete: ";
             cin >> value;
-            cin.ignore();
-            Node* node = search(root, value);
-            if (node != NULL) {
-                del(root, node);
+            cin.ignore(); 
+                deleteValue(root, value);
                 cout << "Node with value " << value << " deleted." << endl;
-            } else {
-                cout << "Value not found in the tree." << endl;
-            }
+
+
         } else if (strcmp(inp, "search") == 0) {
             int value;
             cout << "What value are you searching for: ";
