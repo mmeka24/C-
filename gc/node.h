@@ -10,7 +10,7 @@ class graph{
 	void print();
 	void add_vertex(char * label);
 	void remove_vertex(char * label);
-	void add_edge(char * label_one,char * label_two);
+	void add_edge(char * label_one,char * label_two, int weight);
 	void remove_edge(char * label_one,char*label_two);
 	void dijkstra(char *label_one,char * label_two);
 };
