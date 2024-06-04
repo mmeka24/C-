@@ -193,143 +193,135 @@ void insert2(Node *& root, Node *& node){
 
 }
 
-// Function to replace one subtree as a child of its parent with another subtree
-
-
-//swapping the vals
-
-void transplant(Node*& root, Node*& u, Node*& v) {
-    if (u->getParent() == nullptr) {
-        root = v;
-    } else if (u == u->getParent()->getLeft()) {
-        u->getParent()->setLeft(v);
-    } else {
-        u->getParent()->setRight(v);
-    }
-    if (v != nullptr) {
-        v->setParent(u->getParent());
-    }
-}
-
-//delete fix algorithm 
-void fixDeleteRBTree(Node *& root, Node *&node) {
+void fixDeleteRBTree(Node *&root, Node *&node) {
     if (node == nullptr) {
         return;
     }
 
+    //root deletion 
     if (node == root) {
         root = nullptr;
-        return;
+        delete node; 
+        return; 
     }
 
+
+//NODE OR NODE CHILDREN IS RED JUST DELETE THE NDOE 
     if (node->getColor() == 1 || (node->left != nullptr && node->left->getColor() == 1) || (node->right != nullptr && node->right->getColor() == 1)) {
-       //if node to be deleted is red or has red child reove the node and replace with child 
-       //make child black 
-       
-        Node *child;
-        if (node->left != nullptr) {
-            child = node->left;
-        } else {
-            child = node->right;
-        }
+        Node *child = node->left != nullptr ? node->left : node->right;
+    //IF NODE TO DELTE IS LEFT 
         if (node == node->parent->left) {
-            node->parent->left = child;
-            if (child != nullptr)
-                child->parent = node->parent;
-            if (child != nullptr) 
-                child->setColor(0);
-            delete node;
-        } else {
-            node->parent->right = child;
-            if (child != nullptr)
-                child->parent = node->parent;
-            if (child != nullptr) child->setColor(0);
-            delete node;
+            node->parent->left = child; 
+            if (child != nullptr) {
+                child->parent = node->parent; 
+                child->setColor(0); 
+            }
+            delete node; 
+        } 
+        //IF NODE TO DELETE IS RIGHT CHILD
+        else {
+            node->parent->right = child; 
+            if (child != nullptr) {
+                child->parent = node->parent; 
+                child->setColor(0); 
+            }
+            delete node; 
         }
-    } else {
-        //DOUBLE BALCKS 
-        Node *sibling = nullptr;
-        Node *parent = nullptr;
-        Node *ptr = node;
-        //double black is when black or null 
-        while (ptr != root && (ptr == nullptr || ptr->getColor() == 0)) {
-            parent = ptr->parent;
+    } 
+    
+    else {
+        Node *sibling = nullptr; 
+        Node *parent = nullptr; 
+        Node *ptr = node; 
+
+//DOUBLE BLACKS ARE GONNA NOW BE 2 
+        ptr->setColor(2); 
+
+        while (ptr != root && (ptr == nullptr || ptr->getColor() == 2)) {
+            parent = ptr->parent; 
             if (ptr == parent->left) {
-                sibling = parent->right;
-                //c1 sibiling is red 
+                sibling = parent->right; 
+                //SIBILING IS RED 
                 if (sibling->getColor() == 1) {
-                    sibling->setColor(0);
-                    parent->setColor(1);
-                    rotateLeft(root, parent);
-                } 
-                //sib is black with two black children 
-                else {
+                    sibling->setColor(0); 
+                    parent->setColor(1); 
+                    rotateLeft(root, parent); 
+                } else {
+
+                    // If sibling is black with two black children
+
                     if ((sibling->left == nullptr || sibling->left->getColor() == 0) && (sibling->right == nullptr || sibling->right->getColor() == 0)) {
-                        sibling->setColor(1);
-                        if (parent->getColor() == 1)
-                            parent->setColor(0);
-                        else
-                            parent->setColor(2);
-                        ptr = parent;
-                    } 
-                    //c3 sib is black with atleast one red child
-                    else {
-                        if (sibling->right == nullptr || sibling->right->getColor() == 0) {
-                            if (sibling->left != nullptr) sibling->left->setColor(0);
-                            sibling->setColor(1);
-                            rotateRight(root, sibling);
-                            sibling = parent->right;
+                        sibling->setColor(1); 
+                        if (parent->getColor() == 1) {
+                            parent->setColor(0); 
+                        } else {
+                            parent->setColor(2); 
                         }
-                        sibling->setColor(parent->getColor());
-                        parent->setColor(0);
-                        if (sibling->right != nullptr) sibling->right->setColor(0);
-                        rotateLeft(root, parent);
-                        break;
+                        ptr = parent; 
+                    } else {
+                     // If sibling is black with at least one red child
+
+                        if (sibling->right == nullptr || sibling->right->getColor() == 0) {
+                            sibling->left->setColor(0); 
+                            sibling->setColor(1); 
+                            rotateRight(root, sibling); 
+                            sibling = parent->right; 
+                        }
+                        sibling->setColor(parent->getColor()); 
+                        parent->setColor(0); 
+                        sibling->right->setColor(0); 
+                        rotateLeft(root, parent); 
+                        break; 
                     }
                 }
             } else {
-                //sib is red 
-                sibling = parent->left;
+                // If the node is a right child
+
+                sibling = parent->left; 
                 if (sibling->getColor() == 1) {
-                    sibling->setColor(0);
-                    parent->setColor(1);
-                    rotateRight(root, parent);
-                } 
-                
-                else {
-                    //sib is black with 2 black children 
+                    sibling->setColor(0); 
+                    parent->setColor(1); 
+                    rotateRight(root, parent); 
+                } else {
+                                        // If sibling is black with two black children
+
                     if ((sibling->left == nullptr || sibling->left->getColor() == 0) && (sibling->right == nullptr || sibling->right->getColor() == 0)) {
-                        sibling->setColor(1);//red
-                        if (parent->getColor() == 1)
-                            parent->setColor(0);//b
-                        else
-                            parent->setColor(2);
-                        ptr = parent;
-                    } else {
-                        //sib is black with atleast one red child
-                        if (sibling->left == nullptr || sibling->left->getColor() == 0) {
-                            if (sibling->right != nullptr) sibling->right->setColor(0);
-                            sibling->setColor(1);
-                            rotateLeft(root, sibling);
-                            sibling = parent->left;
+                        sibling->setColor(1); 
+                        if (parent->getColor() == 1) {
+                            parent->setColor(0); 
+                        } else {
+                            parent->setColor(2); 
                         }
-                        sibling->setColor(parent->getColor());
-                        parent->setColor(0);
-                        if (sibling->left != nullptr) sibling->left->setColor(0);
-                        rotateRight(root, parent);
-                        break;
+                        ptr = parent; 
+                    } else {
+                        if (sibling->left == nullptr || sibling->left->getColor() == 0) {
+                            sibling->right->setColor(0); 
+                            sibling->setColor(1); 
+                            rotateLeft(root, sibling); 
+                            sibling = parent->left; 
+                        }
+                        sibling->setColor(parent->getColor()); 
+                        parent->setColor(0); 
+                        sibling->left->setColor(0); 
+                        rotateRight(root, parent); 
+                        break; 
                     }
                 }
             }
         }
-        if (node == node->parent->left)
-            node->parent->left = nullptr;
-        else
-            node->parent->right = nullptr;
-        delete node;
-        if (root != nullptr) root->setColor(0); //root = blacl
+
+        if (node == node->parent->left) {
+            node->parent->left = nullptr; 
+        } else {
+            node->parent->right = nullptr; 
+        }
+        delete node; 
+        if (root != nullptr) {
+            root->setColor(0); 
+        }
     }
 }
+
 
 
 Node* del(Node *&root, int data) {
