@@ -208,6 +208,8 @@ void fixDeleteRBTree(Node *&root, Node *&node) {
 
 //NODE OR NODE CHILDREN IS RED JUST DELETE THE NDOE 
     if (node->getColor() == 1 || (node->left != nullptr && node->left->getColor() == 1) || (node->right != nullptr && node->right->getColor() == 1)) {
+        
+        cout << "leaf"; 
         Node *child = node->left != nullptr ? node->left : node->right;
     //IF NODE TO DELTE IS LEFT 
         if (node == node->parent->left) {
@@ -249,9 +251,10 @@ void fixDeleteRBTree(Node *&root, Node *&node) {
                 } else {
 
                     // If sibling is black with two black children
-
+                    
                     if ((sibling->left == nullptr || sibling->left->getColor() == 0) && (sibling->right == nullptr || sibling->right->getColor() == 0)) {
-                        sibling->setColor(1); 
+                        //sibling->setColor(1); 
+                        sibling->setColor(parent->getColor()); 
                         if (parent->getColor() == 1) {
                             parent->setColor(0); 
                         } else {
@@ -261,15 +264,17 @@ void fixDeleteRBTree(Node *&root, Node *&node) {
                     } else {
                      // If sibling is black with at least one red child
 
-                        if (sibling->right == nullptr || sibling->right->getColor() == 0) {
+                        if (sibling->right != nullptr && sibling->right->getColor() == 0) {
                             sibling->left->setColor(0); 
                             sibling->setColor(1); 
+                            cout << "4"; 
                             rotateRight(root, sibling); 
                             sibling = parent->right; 
                         }
                         sibling->setColor(parent->getColor()); 
                         parent->setColor(0); 
                         sibling->right->setColor(0); 
+                        cout << "5"; 
                         rotateLeft(root, parent); 
                         break; 
                     }
@@ -279,6 +284,7 @@ void fixDeleteRBTree(Node *&root, Node *&node) {
 
                 sibling = parent->left; 
                 if (sibling->getColor() == 1) {
+                    cout << "1"; 
                     sibling->setColor(0); 
                     parent->setColor(1); 
                     rotateRight(root, parent); 
@@ -297,12 +303,14 @@ void fixDeleteRBTree(Node *&root, Node *&node) {
                         if (sibling->left == nullptr || sibling->left->getColor() == 0) {
                             sibling->right->setColor(0); 
                             sibling->setColor(1); 
+                            cout << "2"; 
                             rotateLeft(root, sibling); 
                             sibling = parent->left; 
                         }
                         sibling->setColor(parent->getColor()); 
                         parent->setColor(0); 
                         sibling->left->setColor(0); 
+                        cout << "3";
                         rotateRight(root, parent); 
                         break; 
                     }
